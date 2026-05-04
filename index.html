@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JKB Control Room Launcher</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root{
+      --bg1:#0a0f1c;
+      --bg2:#08101a;
+      --bg3:#06101d;
+      --cyan:#00e5ff;
+      --amber:#ffaa00;
+      --text:#eafcff;
+      --muted:#8aa4b3;
+      --card:rgba(9,24,38,.82);
+      --line:rgba(0,229,255,.25);
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Segoe UI, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(0,229,255,.16), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(255,170,0,.12), transparent 28%),
+        linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:
+        linear-gradient(rgba(0,229,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,.04) 1px, transparent 1px);
+      background-size:42px 42px;
+      pointer-events:none;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:20px 28px;
+      border-bottom:1px solid var(--line);
+      background:rgba(3,12,22,.7);
+      backdrop-filter:blur(12px);
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+
+    .brand{
+      display:flex;
+      gap:14px;
+      align-items:center;
+    }
+
+    .logo{
+      width:46px;
+      height:46px;
+      display:grid;
+      place-items:center;
+      border:1px solid var(--cyan);
+      border-radius:14px;
+      color:var(--cyan);
+      box-shadow:0 0 18px rgba(0,229,255,.38);
+      background:rgba(0,229,255,.06);
+      font-size:22px;
+    }
+
+    h1{
+      margin:0;
+      font-size:22px;
+      letter-spacing:1px;
+    }
+
+    .subtitle{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:3px;
+    }
+
+    .top-actions{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .login-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      border:1px solid var(--line);
+      color:#001018;
+      background:linear-gradient(90deg,var(--cyan),#78f4ff);
+      box-shadow:0 0 18px rgba(0,229,255,.25);
+      padding:11px 16px;
+      border-radius:14px;
+      cursor:pointer;
+      font-weight:800;
+      text-decoration:none;
+    }
+
+    .login-btn:hover{
+      box-shadow:0 0 25px rgba(0,229,255,.45);
+      transform:translateY(-1px);
+    }
+
+    .wrap{
+      max-width:1180px;
+      margin:auto;
+      padding:34px 24px 60px;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.4fr .8fr;
+      gap:22px;
+      margin-bottom:24px;
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      background:var(--card);
+      border-radius:24px;
+      padding:24px;
+      box-shadow:0 18px 50px rgba(0,0,0,.35);
+    }
+
+    .panel h2{
+      margin:0 0 10px;
+      font-size:28px;
+    }
+
+    .panel p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .status-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .mini{
+      border:1px solid rgba(0,229,255,.18);
+      border-radius:16px;
+      padding:14px;
+      background:rgba(0,0,0,.18);
+    }
+
+    .mini b{
+      display:block;
+      font-size:22px;
+      color:var(--cyan);
+    }
+
+    .mini span{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .clock{
+      font-size:34px;
+      color:var(--amber);
+      text-shadow:0 0 14px rgba(255,170,0,.45);
+      margin-top:6px;
+    }
+
+    .date{
+      color:var(--muted);
+      margin-top:8px;
+    }
+
+    .section-title{
+      margin:28px 0 14px;
+      font-size:16px;
+      letter-spacing:1px;
+      color:var(--cyan);
+      text-transform:uppercase;
+    }
+
+    .launcher-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:18px;
+    }
+
+    .app-card{
+      border:1px solid rgba(0,229,255,.22);
+      background:linear-gradient(180deg, rgba(0,229,255,.08), rgba(7,18,30,.82));
+      border-radius:22px;
+      padding:22px;
+      min-height:188px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      transition:.25s;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .app-card::after{
+      content:"";
+      position:absolute;
+      inset:auto -40px -50px auto;
+      width:120px;
+      height:120px;
+      border-radius:50%;
+      background:rgba(0,229,255,.1);
+      filter:blur(4px);
+    }
+
+    .app-card:hover{
+      transform:translateY(-5px);
+      border-color:var(--cyan);
+      box-shadow:0 0 28px rgba(0,229,255,.22);
+    }
+
+    .app-head{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    .app-icon{
+      width:50px;
+      height:50px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      color:var(--cyan);
+      border:1px solid var(--line);
+      background:rgba(0,229,255,.08);
+      font-size:22px;
+    }
+
+    .tag{
+      font-size:11px;
+      color:#06101d;
+      background:var(--amber);
+      border-radius:20px;
+      padding:5px 9px;
+      font-weight:700;
+    }
+
+    .app-card h3{
+      margin:18px 0 8px;
+      font-size:19px;
+    }
+
+    .app-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.45;
+      font-size:14px;
+    }
+
+    .open-btn{
+      margin-top:18px;
+      width:100%;
+      padding:12px 14px;
+      border:none;
+      border-radius:14px;
+      cursor:pointer;
+      color:#001018;
+      font-weight:800;
+      background:linear-gradient(90deg,var(--cyan),#78f4ff);
+      box-shadow:0 0 18px rgba(0,229,255,.25);
+    }
+
+    .footer-note{
+      margin-top:24px;
+      color:var(--muted);
+      font-size:13px;
+      text-align:center;
+    }
+
+    @media(max-width:1000px){
+      .launcher-grid{grid-template-columns:repeat(2,1fr)}
+    }
+
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr}
+    }
+
+    @media(max-width:620px){
+      .topbar{flex-direction:column;align-items:flex-start;gap:16px}
+      .launcher-grid{grid-template-columns:1fr}
+      .status-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo"><i class="fa-solid fa-tower-broadcast"></i></div>
+      <div>
+        <h1>MONITORING ASSETS</h1>
+        <div class="subtitle">Engineering Digital System Launcher</div>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button class="login-btn" type="button" id="loginBtn">
+        <i class="fa-solid fa-right-to-bracket"></i>
+        Login
+      </button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="panel">
+        <h2>Engineering Control Panel</h2>
+        <p>
+          Central control interface for hospital engineering systems.
+          Open modules and manage system operations from a single dashboard.
+        </p>
+
+        <div class="status-grid">
+          <div class="mini"><b id="totalApps">0</b><span>Available Modules</span></div>
+          <div class="mini"><b>ONLINE</b><span>System Status</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="subtitle">Local Time</div>
+        <div class="clock" id="clock">--:--:--</div>
+        <div class="date" id="dateText">Loading date...</div>
+      </div>
+    </section>
+
+    <div class="section-title">Main Modules</div>
+    <section class="launcher-grid" id="launcherGrid"></section>
+
+    <div class="footer-note">
+      Replace the URL inside <b>MODULES</b> with your real GitHub Pages / Apps Script / Firebase Hosting links.
+    </div>
+  </main>
+
+  <script>
+    const MODULES = [
+      {
+        title: "FEMS Dashboard",
+        desc: "Facility engineering dashboard, asset summary and maintenance status.",
+        icon: "fa-solid fa-building-shield",
+        tag: "FEMS",
+        url: "https://jkbpmsystem.github.io/fnb/dashboard.html?module=FEMS"
+      },
+      {
+        title: "BEMS Dashboard",
+        desc: "Biomedical engineering asset dashboard and equipment monitoring.",
+        icon: "fa-solid fa-heart-pulse",
+        tag: "BEMS",
+        url: "https://jkbpmsystem.github.io/fnb/dashboard.html?module=BEMS"
+      },
+      {
+        title: "Asset Master FEMS",
+        desc: "Open asset database, asset detail modal, filters and records.",
+        icon: "fa-solid fa-database",
+        tag: "ASSET",
+        url: "https://jkbpmsystem.github.io/fnb/asset-master.html?module=FEMS"
+      },
+      {
+        title: "Asset Master BEMS",
+        desc: "Open asset database, asset detail modal, filters and records.",
+        icon: "fa-solid fa-database",
+        tag: "ASSET",
+        url: "https://jkbpmsystem.github.io/fnb/asset-master.html?module=BEMS"
+      },
+      {
+        title: "During Warranty PPM-FEMS",
+        desc: "View planned preventive maintenance schedule by month and asset.",
+        icon: "fa-solid fa-calendar-check",
+        tag: "PPM",
+        url: "https://jkbpmsystem.github.io/fnb/update-ppm.html?module=FEMS"
+      },
+      {
+        title: "During Warranty PPM-BEMS",
+        desc: "View planned preventive maintenance schedule by month and asset.",
+        icon: "fa-solid fa-calendar-check",
+        tag: "PPM",
+        url: "https://jkbpmsystem.github.io/fnb/update-ppm.html?module=BEMS"
+      },
+      {
+        title: "Post Warranty PPM-FEMS",
+        desc: "View planned preventive maintenance schedule by month and asset.",
+        icon: "fa-solid fa-calendar-check",
+        tag: "PPM",
+        url: "https://jkbpmsystem.github.io/fnb/update-post.html?module=FEMS"
+      },
+      {
+        title: "Post Warranty PPM-BEMS",
+        desc: "View planned preventive maintenance schedule by month and asset.",
+        icon: "fa-solid fa-calendar-check",
+        tag: "PPM",
+        url: "https://jkbpmsystem.github.io/fnb/update-post.html?module=BEMS"
+      }
+    ];
+
+    function escapeHtml(value){
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function renderModules(){
+      const grid = document.getElementById("launcherGrid");
+      const totalApps = document.getElementById("totalApps");
+
+      if(!grid || !totalApps) return;
+
+      grid.innerHTML = "";
+
+      MODULES.forEach((moduleItem) => {
+        const card = document.createElement("article");
+        card.className = "app-card";
+
+        card.innerHTML = `
+          <div>
+            <div class="app-head">
+              <div class="app-icon"><i class="${escapeHtml(moduleItem.icon)}"></i></div>
+              <div class="tag">${escapeHtml(moduleItem.tag)}</div>
+            </div>
+            <h3>${escapeHtml(moduleItem.title)}</h3>
+            <p>${escapeHtml(moduleItem.desc)}</p>
+          </div>
+          <button class="open-btn" type="button" data-url="${escapeHtml(moduleItem.url)}">
+            OPEN MODULE
+          </button>
+        `;
+
+        grid.appendChild(card);
+      });
+
+      totalApps.textContent = MODULES.length;
+    }
+
+    function openModule(url){
+      if(!url) return;
+      window.location.href = url;
+    }
+
+    // ===============================
+    // SET YOUR LOGIN URL HERE
+    // ===============================
+    const LOGIN_URL = "https://jkbpmsystem.github.io/fnb/index.html"; // contoh: Apps Script / Firebase Auth page
+
+    function goToLogin(){
+      const currentPage = window.location.href;
+
+      // support redirect param for external login system
+      const separator = LOGIN_URL.includes("?") ? "&" : "?";
+      const loginUrl = LOGIN_URL + separator + "redirect=" + encodeURIComponent(currentPage);
+
+      window.location.href = loginUrl;
+    }
+
+    function updateClock(){
+      const clock = document.getElementById("clock");
+      const dateText = document.getElementById("dateText");
+      const now = new Date();
+
+      if(clock){
+        clock.textContent = now.toLocaleTimeString("en-MY", { hour12:false });
+      }
+
+      if(dateText){
+        dateText.textContent = now.toLocaleDateString("en-MY", {
+          weekday:"long",
+          year:"numeric",
+          month:"long",
+          day:"numeric"
+        });
+      }
+    }
+
+    function attachEvents(){
+      const grid = document.getElementById("launcherGrid");
+      const loginBtn = document.getElementById("loginBtn");
+
+      if(grid){
+        grid.addEventListener("click", function(event){
+          const button = event.target.closest(".open-btn");
+          if(!button) return;
+          openModule(button.dataset.url);
+        });
+      }
+
+      if(loginBtn){
+        loginBtn.addEventListener("click", goToLogin);
+      }
+    }
+
+    function runBasicTests(){
+      console.assert(Array.isArray(MODULES), "MODULES should be an array");
+      console.assert(MODULES.length === 4, "Expected 4 modules after removing Statutory, HOD Request, Management Report and Warranty Contract");
+      console.assert(typeof renderModules === "function", "renderModules should be defined once as a function");
+      console.assert(typeof updateClock === "function", "updateClock should be defined once as a function");
+      console.assert(typeof goToLogin === "function", "goToLogin should be defined as a function");
+      console.assert(typeof LOGIN_URL === "string" && LOGIN_URL.startsWith("http"), "LOGIN_URL should be a valid external link");
+    }
+
+    document.addEventListener("DOMContentLoaded", function(){
+      runBasicTests();
+      renderModules();
+      attachEvents();
+      updateClock();
+      setInterval(updateClock, 1000);
+    });
+  </script>
+</body>
+</html>
