@@ -115,6 +115,7 @@
     }
 
     .wrap{
+      margin-top:20px;
       max-width:1180px;
       margin:auto;
       padding:34px 24px 60px;
@@ -306,14 +307,7 @@
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <div class="logo"><i class="fa-solid fa-tower-broadcast"></i></div>
-      <div>
-        <h1>PORTAL ENGINEERING</h1>
-        <div class="subtitle">Engineering Digital System Launcher</div>
-      </div>
-    </div>
+  
 
   <main class="wrap">
     <section class="hero">
@@ -348,19 +342,33 @@
   <script>
     const MODULES = [
       {
-        title: "System",
+        title: "FEMS & BEMS",
         desc: "Facility and Biomedical engineering dashboard, asset summary and maintenance status.",
-        icon: "fa-solid fa-brain-circuit",
-        tag: "FEMS n BEMS",
+        icon: "fa-solid fa-building-shield",
+        tag: "FEMS/BEMS",
         url: "https://jkbpmsystem.github.io/fnb/dashboard.html"
       },
       {
-        title: "System",
-        desc: "Registration New Assets FEMS",
-        icon: "fa-solid fa-cubes",
+        title: "VO REGISTER",
+        desc: "Facility engineering new registration asset.",
+        icon: "fa-solid fa-heart-pulse",
         tag: "FEMS",
         url: "https://jkbpmsystem.github.io/vo/"
       }
+      /*{
+        title: "Asset Master",
+        desc: "Open asset database, asset detail modal, filters and records.",
+        icon: "fa-solid fa-database",
+        tag: "ASSET",
+        url: "https://your-website.com/asset-master.html"
+      },
+      {
+        title: "PPM Calendar",
+        desc: "View planned preventive maintenance schedule by month and asset.",
+        icon: "fa-solid fa-calendar-check",
+        tag: "PPM",
+        url: "https://your-website.com/preventive-maintenance.html"
+      }*/
     ];
 
     function escapeHtml(value){
@@ -412,7 +420,7 @@
     // ===============================
     // SET YOUR LOGIN URL HERE
     // ===============================
-    const LOGIN_URL = "https://jkbpmsystem.github.io/fnb/index.html"; // contoh: Apps Script / Firebase Auth page
+    const LOGIN_URL = "https://your-login-page.com"; // contoh: Apps Script / Firebase Auth page
 
     function goToLogin(){
       const currentPage = window.location.href;
