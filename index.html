@@ -93,27 +93,6 @@
       gap:12px;
     }
 
-    .login-btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      border:1px solid var(--line);
-      color:#001018;
-      background:linear-gradient(90deg,var(--cyan),#78f4ff);
-      box-shadow:0 0 18px rgba(0,229,255,.25);
-      padding:11px 16px;
-      border-radius:14px;
-      cursor:pointer;
-      font-weight:800;
-      text-decoration:none;
-    }
-
-    .login-btn:hover{
-      box-shadow:0 0 25px rgba(0,229,255,.45);
-      transform:translateY(-1px);
-    }
-
     .wrap{
       margin-top:20px;
       max-width:1180px;
@@ -315,11 +294,6 @@
         <div class="subtitle">Hospital Engineering Dashboard</div>
       </div>
     </div>
-    <div class="top-actions">
-      <button class="login-btn" id="loginBtn" type="button">
-        <i class="fa-solid fa-right-to-bracket"></i> STAFF LOGIN
-      </button>
-    </div>
   </header>
 
   <main class="wrap">
@@ -430,21 +404,6 @@
       window.open(url, '_blank', 'noopener,noreferrer');
     }
 
-    // ===============================
-    // SET YOUR LOGIN URL HERE
-    // ===============================
-    const LOGIN_URL = "https://your-login-page.com"; // contoh: Apps Script / Firebase Auth page
-
-    function goToLogin(){
-      const currentPage = window.location.href;
-
-      // support redirect param for external login system
-      const separator = LOGIN_URL.includes("?") ? "&" : "?";
-      const loginUrl = LOGIN_URL + separator + "redirect=" + encodeURIComponent(currentPage);
-
-      window.open(loginUrl, '_blank', 'noopener,noreferrer');
-    }
-
     function updateClock(){
       const clock = document.getElementById("clock");
       const dateText = document.getElementById("dateText");
@@ -466,7 +425,6 @@
 
     function attachEvents(){
       const grid = document.getElementById("launcherGrid");
-      const loginBtn = document.getElementById("loginBtn");
 
       if(grid){
         grid.addEventListener("click", function(event){
@@ -475,23 +433,9 @@
           openModule(button.dataset.url);
         });
       }
-
-      if(loginBtn){
-        loginBtn.addEventListener("click", goToLogin);
-      }
-    }
-
-    function runBasicTests(){
-      console.assert(Array.isArray(MODULES), "MODULES should be an array");
-      console.assert(MODULES.length === 3, "Expected 3 modules after removing Statutory, HOD Request, Management Report and Warranty Contract");
-      console.assert(typeof renderModules === "function", "renderModules should be defined once as a function");
-      console.assert(typeof updateClock === "function", "updateClock should be defined once as a function");
-      console.assert(typeof goToLogin === "function", "goToLogin should be defined as a function");
-      console.assert(typeof LOGIN_URL === "string" && LOGIN_URL.startsWith("http"), "LOGIN_URL should be a valid external link");
     }
 
     document.addEventListener("DOMContentLoaded", function(){
-      runBasicTests();
       renderModules();
       attachEvents();
       updateClock();
